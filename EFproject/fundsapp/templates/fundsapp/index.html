@@ -1,0 +1,55 @@
+{% load static %}
+<html>
+ <head>
+   <title>Funds page</title>
+ </head>
+ <body>
+
+    <form action="fundsUpload/" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="csv_file">Upload funds csv</label>
+        <input type="file" id="csv_file" name="csv_file">
+        <input type="submit" value="Upload">
+    </form>
+
+    <form action="" method="GET">
+        {% csrf_token %}
+        <label for="strategy">Choose a strategy:</label>
+        <select id="strategy" name="strategy">
+            <option value="None">None</option>
+            <option value="Long/Short Equity">Long/Short Equity</option>
+            <option value="Global Macro">Global Macro</option>
+            <option value="Arbitrage">Arbitrage</option>
+        </select>
+        <input type="submit" value="Filter">
+    </form>
+
+    {% if fundResults %}
+
+        <table style="width:40%">
+            <tr>
+                <th>Name</th>
+                <th>Strategy</th>
+                <th>AUM (USD)</th>
+                <th>Inception Date</th>
+            </tr>
+            {% for rows in fundResults %}
+            <tr>
+                <td style="text-align: center;">{{rows.name}}</td>
+                <td style="text-align: center;">{{rows.strategy}}</td>
+                <td style="text-align: center;">{{rows.aum}}</td>
+                <td style="text-align: center;">{{rows.inception_date|date:"d/m/Y"}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p>Total number of funds: {{fundCount}}</p>
+        <p>Sum of all fund AUMs: {{aumSum}}</p>
+    
+    {% else %}
+
+        <p>No funds were found.</p>
+
+    {% endif %}
+
+ </body>
+</html>

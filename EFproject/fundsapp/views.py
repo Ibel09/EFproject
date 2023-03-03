@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from .serializers import FundSerializer
 from .models import Fund
 
+# new
+from rest_framework import viewsets
 
 def index(request):
     strategy = request.GET.get('strategy')
@@ -47,18 +49,14 @@ def upload_funds(request):
     return HttpResponse("File uploaded successfully.")
 
 
-# def fund_detail(request, fund_id):
-#     try:
-#         fund = Fund.objects.get(pk=fund_id)
-#     except Fund.DoesNotExist:
-#         raise Http404("Fund does not exist")
-#     return render(request, 'fundsapp/detail.html', {'fund': fund})
+class FundViewSet(viewsets.ModelViewSet):
 
+   serializer_class = FundSerializer
 
-def funds_filtered_by_strategy(request, strategy):   
-    filtered_fund_results = Fund.objects.filter(strategy=strategy)
-    return Response(FundSerializer(filtered_fund_results, many=True).data)
-
-
-def list_funds(request):
-    return Response(FundSerializer(Fund.objects.all(), many=True).data)
+   def get_queryset(self):
+    
+        queryset = Fund.objects.all()
+        strategy = self.request.query_params.get('strategy')
+        if strategy != None:
+            queryset = queryset.filter(strategy=strategy)
+        return queryset   

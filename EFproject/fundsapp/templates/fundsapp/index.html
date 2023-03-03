@@ -8,7 +8,7 @@
     <form action="fundsUpload/" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="csv_file">Upload funds csv</label>
-        <input type="file" id="csv_file" name="csv_file">
+        <input type="file" id="csv_file" name="csv_file" required>
         <input type="submit" value="Upload">
     </form>
 
